@@ -22,11 +22,25 @@ class CookieManager extends Component {
 
   // ----- Cookie helpers -----
   getCookies = () => {
+    const cookies = document.cookie.split(";")
+    return cookies.map((cookieStr) => {
+      const rawStr = cookieStr.trim()
+      const [name, value] = rawStr.split('=');
 
+      return {name: name?.trim(), value: value?.trim()};
+    })
+    
   };
 
   setCookie = (name, value, days) => {
-
+    const expireDate = new Date();
+    expireDate.setTime(expireDate.getTime() + days * 24 * 60 * 60 * 1000);
+    const cookieStr = `${name}=${value}; expires=${expireDate.toUTCString()}; path=/`
+    console.log(cookieStr);
+    document.cookie = cookieStr;
+    console.log(document.cookie);
+    
+    
   };
 
   deleteCookie = (name) => {

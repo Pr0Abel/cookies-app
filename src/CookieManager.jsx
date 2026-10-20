@@ -22,22 +22,15 @@ class CookieManager extends Component {
 
     // ----- Cookie helpers -----
     getCookies = () => {
-        cookieStore.getAll()
-            .then(cs => {
-                console.log(cs);
+    const cookies = document.cookie.split(";")
+    return cookies.map((cookieStr) => {
+      const rawStr = cookieStr.trim()
+      const [name, value] = rawStr.split('=');
 
-                const cookies = document.cookie.split(";")
-                return cookies.map((cookieStr) => {
-                    const rawStr = cookieStr.trim()
-                    const [name, value] = rawStr.split('=');
-
-                    return { name: name?.trim(), value: value?.trim() };
-                })
-            })
-
-            .catch(console.warn)
-
-    };
+      return {name: name?.trim(), value: value?.trim()};
+    })
+    
+  };
 
     setCookie = (name, value, days) => {
         const expireDate = new Date();
@@ -51,11 +44,16 @@ class CookieManager extends Component {
     };
 
     deleteCookie = (name) => {
-
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`
     };
 
     clearAllCookies = () => {
-
+        const cookies = this.getCookies()
+        cookies.forEach((cookie) => {
+            this.deleteCookie(cookie.name);
+        })
+        this.refreshCookies()
+        this.showMessage('All cookies cleared')
     };
 
     refreshCookies = () => {
